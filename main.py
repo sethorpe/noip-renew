@@ -51,9 +51,10 @@ def main():
 
             log.info("Successfully navigated to DNS records page")
             log.info("Renewing hostname...")
-            records_page.renew_hostname()
+            screenshot_path = records_page.renew_hostname()
 
             log.info("Hostname renewal completed successfully")
+            log.info(f"Screenshot saved to: {screenshot_path}")
 
             browser.close()
             log.info("Browser closed")

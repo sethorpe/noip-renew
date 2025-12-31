@@ -27,27 +27,48 @@ class RecordsPage:
                 "The hostname might already be renewed or not expiring within 7 days."
             )
 
-    def renew_hostname(self):
-        """Renew hostname with error handling"""
+    def renew_hostname(self) -> str:
+        """Renew hostname with error handling
+
+        Returns:
+            str: Path to the screenshot file
+
+        Raises:
+            Exception: If renewal or screenshot capture fails
+        """
         try:
             log.debug("Clicking confirm button to renew hostname...")
             self.confirm_button.click()
+
+            # Wait for the page to respond to the click
             self.page.wait_for_load_state("networkidle", timeout=15000)
-            log.info("Hostname renewal confirmed")
-        except TimeoutError:
-            log.error("Confirm button timeout")
-            raise Exception("Failed to confirm hostname renewal - page timeout")
+
+            # Wait for the expiration banner to disappear (proof that renewal succeeded)
+            log.debug("Waiting for expiration banner to disappear...")
+            expect(self.expiration_banner).to_be_hidden(timeout=10000)
+            log.info("Expiration banner hidden - renewal successful")
+
+        except TimeoutError as e:
+            log.error("Timeout waiting for renewal confirmation")
+            log.warning("The expiration banner did not disappear after clicking confirm")
+            raise Exception("Failed to confirm hostname renewal - banner still visible")
         except Exception as e:
-            log.error(f"Confirm button click failed: {e}")
-            raise Exception(f"Failed to click confirm button: {e}")
+            log.error(f"Renewal process failed: {e}")
+            raise Exception(f"Failed to renew hostname: {e}")
 
         try:
-            self._capture_screenshot()
+            screenshot_path = self._capture_screenshot()
+            return screenshot_path
         except Exception as e:
-            log.warning(f"Screenshot capture failed: {e}")
+            log.error(f"Screenshot capture failed: {e}")
+            raise Exception(f"Renewal succeeded but screenshot failed: {e}")
 
-    def _capture_screenshot(self):
-        """Capture screenshot"""
+    def _capture_screenshot(self) -> str:
+        """Capture screenshot
+
+        Returns:
+            str: Absolute path to the screenshot file
+        """
         try:
             screenshot_dir = Path(SCREENSHOT_DIR)
             if not screenshot_dir.is_absolute():
@@ -61,6 +82,8 @@ class RecordsPage:
             log.debug(f"Saving screenshot to: {screenshot_path}")
             self.page.screenshot(path=str(screenshot_path))
             log.info(f"Screenshot saved: {screenshot_path.name}")
+
+            return str(screenshot_path.absolute())
 
         except Exception as e:
             log.error(f"Screenshot save failed: {e}")

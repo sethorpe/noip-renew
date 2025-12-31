@@ -31,17 +31,17 @@ cd noip-automation
 poetry install
 ```
 
-3. Install Playwright browsers:
-```bash
-poetry run playwright install chromium
-```
-
-4. Create a `.env` file in the project root:
+3. Create a `.env` file in the project root:
 ```bash
 cp .env.example .env
 ```
 
-5. Configure your environment variables (see Configuration section below)
+4. Configure your environment variables (see Configuration section below)
+
+5. Install Playwright browser (installs the browser specified in your `.env` file):
+```bash
+poetry run python setup.py
+```
 
 ## Configuration
 

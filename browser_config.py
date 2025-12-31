@@ -16,6 +16,7 @@ SCREENSHOT_DIR: str = os.getenv("SCREENSHOT_DIR", ".")
 
 BROWSER_ARGS: list[str] = [
     "--disable-blink-features=AutomationControlled",  # Makes detection harder
+    "--start-maximized",  # Maximize window on launch (Chromium only)
 ]
 
 VIEWPORT_WIDTH: int = int(os.getenv("VIEWPORT_WIDTH", "1920"))
@@ -30,24 +31,32 @@ def get_browser_config() -> dict:
     """Get browser launch configuration"""
     return {
         "headless": HEADLESS,
-        "slow_motion": SLOW_MOTION,
+        "slow_mo": SLOW_MOTION,
         "args": BROWSER_ARGS,
     }
 
 
 def get_context_config() -> dict:
     """Get browser context configuration"""
-    return {
-        "viewport": {
-            "width": VIEWPORT_WIDTH,
-            "height": VIEWPORT_HEIGHT,
-        },
+    config = {
         "user_agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/120.0.0.0 Safari/537.36"
         ),
     }
+
+    if HEADLESS:
+        # In headless mode, use explicit viewport size
+        config["viewport"] = {
+            "width": VIEWPORT_WIDTH,
+            "height": VIEWPORT_HEIGHT,
+        }
+    else:
+        # In headed mode, use no_viewport to allow --start-maximized to work
+        config["no_viewport"] = True
+
+    return config
 
 
 def print_browser_config():
