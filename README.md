@@ -1,6 +1,8 @@
 # No-IP Hostname Renewal Automation
 
-Automated renewal of No-IP hostnames using Playwright and Python. This script logs into your No-IP account, handles 2FA authentication, and renews your hostname(s) to prevent expiration.
+Automated renewal of No-IP free dynamic DNS hostnames using Playwright and Python. This script logs into your No-IP account, handles 2FA authentication, and renews your free hostname to prevent expiration.
+
+No-IP's free tier includes one dynamic DNS hostname that expires after 30 days of inactivity. This automation ensures your hostname stays active by renewing it automatically before expiration.
 
 ## Features
 
@@ -114,10 +116,11 @@ The project includes a GitHub Actions workflow that runs automatically on the 1s
 
 1. **Login**: Navigates to No-IP login page and submits credentials
 2. **2FA**: Generates TOTP code and enters it in the verification form
-3. **Navigate**: Finds your hostname on the dashboard
+3. **Navigate**: Finds your free hostname on the dashboard
 4. **Renew**: Clicks the renewal confirmation button
-5. **Capture**: Takes a screenshot of the result
-6. **Log**: All actions are logged for debugging
+5. **Verify**: Waits for expiration banner to disappear (confirms renewal succeeded)
+6. **Capture**: Takes a screenshot of the post-renewal state
+7. **Log**: All actions are logged for debugging
 
 ## Project Structure
 
@@ -166,8 +169,9 @@ Set `LOG_LEVEL=DEBUG` for detailed debugging information.
 - Ensure your system time is synchronized
 
 **"Expiration banner not found"**
-- Your hostname might already be renewed
+- Your free hostname might already be renewed (valid for 30 days)
 - Hostname might not be expiring within 7 days
+- No-IP only shows the renewal banner when expiration is approaching
 
 ### Debug Mode
 
@@ -205,7 +209,7 @@ MIT License - See LICENSE file for details
 
 ## Disclaimer
 
-This tool is for personal use only. Use at your own risk. The authors are not responsible for any issues that may arise from using this automation tool.
+This tool is for personal use with No-IP's free tier service only. Use at your own risk. The authors are not responsible for any issues that may arise from using this automation tool. Please review No-IP's Terms of Service before using this automation.
 
 ## Acknowledgments
 
