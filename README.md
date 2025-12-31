@@ -24,7 +24,7 @@ No-IP's free tier includes one dynamic DNS hostname that expires after 30 days o
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/sethorpe/noip-automation.git
+git clone https://github.com/sethorpe/noip-renew.git
 cd noip-automation
 ```
 
@@ -125,7 +125,7 @@ The project includes a GitHub Actions workflow that runs automatically on the 1s
 ## Project Structure
 
 ```
-noip-automation/
+noip-renew/
 ├── .github/
 │   └── workflows/
 │       └── noip-renewal.yml    # GitHub Actions workflow
