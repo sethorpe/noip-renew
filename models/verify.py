@@ -1,5 +1,6 @@
 from playwright.sync_api import Page, expect, TimeoutError
 from config import otp_secret
+from .base import BasePage
 from .dashboard import DashboardPage
 import pyotp
 from logger import get_logger
@@ -7,10 +8,10 @@ from logger import get_logger
 log = get_logger("verify")
 
 
-class VerifyPage:
+class VerifyPage(BasePage):
 
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.two_factor_auth_dialog = page.locator("#sign-up-wrap")
         self.header = page.get_by_role("heading", name="Two-Factor Authentication")
         self.verify_button = page.get_by_role("button", name="Verify")
@@ -83,6 +84,7 @@ class VerifyPage:
             self.page.wait_for_load_state("networkidle", timeout=15000)
             log.info("2FA verification successful, redirected to dashboard")
         except TimeoutError:
+            self.capture_screenshot(prefix="error_2fa_timeout")
             log.error("Verify button timeout - OTP may be incorrect or expired")
             raise Exception(
                 "Verify button click failed or page took too long to load. "

@@ -45,7 +45,7 @@ logs/
 *.log
 
 # Screenshots
-dns_renewal_*.png
+*.png
 
 # Playwright
 .playwright/

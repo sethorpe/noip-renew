@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect, TimeoutError
+from .base import BasePage
 from .records import RecordsPage
 from config import dns_hostname
 from logger import get_logger
@@ -6,9 +7,9 @@ from logger import get_logger
 log = get_logger("dashboard")
 
 
-class DashboardPage:
+class DashboardPage(BasePage):
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.dns_hostname_link = page.get_by_text(dns_hostname)
         log.debug(f"Dashboard page initialized for hostname: {dns_hostname}")
 
@@ -19,6 +20,7 @@ class DashboardPage:
             expect(self.dns_hostname_link).to_be_visible(timeout=10000)
             log.info(f"Hostname '{dns_hostname}' found on dashboard")
         except TimeoutError:
+            self.capture_screenshot(prefix="error_dashboard_hostname_not_found")
             log.error(f"Hostname '{dns_hostname}' not found on dashboard")
             raise Exception(
                 f"DNS hostname '{dns_hostname}' not found on dashboard. "
@@ -31,6 +33,7 @@ class DashboardPage:
             self.page.wait_for_load_state("networkidle", timeout=15000)
             log.info("Successfully navigated to DNS records page")
         except Exception as e:
+            self.capture_screenshot(prefix="error_dns_navigation")
             log.error(f"Failed to open DNS record: {e}")
             raise Exception(f"Failed to open DNS record: {e}")
 

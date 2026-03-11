@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, TimeoutError
+from .base import BasePage
 from .verify import VerifyPage
 from config import noip_password, noip_username
 from logger import get_logger
@@ -6,9 +7,9 @@ from logger import get_logger
 log = get_logger("login")
 
 
-class LoginPage:
+class LoginPage(BasePage):
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.username_field = page.locator("#username")
         self.password_field = page.locator("#password")
         self.login_button = page.get_by_role("button", name="Log In")
@@ -47,12 +48,14 @@ class LoginPage:
             self.page.wait_for_load_state("networkidle", timeout=15000)
             log.info("Login successful, redirected to 2FA page")
         except TimeoutError:
+            self.capture_screenshot(prefix="error_login_timeout")
             log.error("Login timeout - credentials may be incorrect")
             raise Exception(
                 "Login failed or took too long. "
                 "Please verify credentials are correct."
             )
         except Exception as e:
+            self.capture_screenshot(prefix="error_login")
             log.error(f"Login submission failed: {e}")
             raise Exception(f"Failed to submit login form: {e}")
 
