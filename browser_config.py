@@ -14,7 +14,7 @@ BROWSER_TYPE: str = os.getenv("BROWSER_TYPE", "chromium")  # chromium, firefox, 
 SLOW_MOTION: int = int(os.getenv("SLOW_MOTION", "0"))
 SCREENSHOT_DIR: str = os.getenv("SCREENSHOT_DIR", ".")
 
-BROWSER_ARGS: list[str] = [
+CHROMIUM_ARGS: list[str] = [
     "--disable-blink-features=AutomationControlled",  # Makes detection harder
     "--start-maximized",  # Maximize window on launch (Chromium only)
 ]
@@ -29,11 +29,13 @@ ACTION_TIMEOUT: int = int(os.getenv("ACTION_TIMEOUT", "15000"))
 
 def get_browser_config() -> dict:
     """Get browser launch configuration"""
-    return {
+    config = {
         "headless": HEADLESS,
         "slow_mo": SLOW_MOTION,
-        "args": BROWSER_ARGS,
     }
+    if BROWSER_TYPE == "chromium":
+        config["args"] = CHROMIUM_ARGS
+    return config
 
 
 def get_context_config() -> dict:
