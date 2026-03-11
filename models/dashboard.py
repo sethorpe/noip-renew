@@ -16,6 +16,7 @@ class DashboardPage(BasePage):
     def open_dns_record(self):
         """Open DNS record with validation"""
         try:
+            log.debug(f"Current URL: {self.page.url}")
             log.debug(f"Looking for hostname link: {dns_hostname}")
             expect(self.dns_hostname_link).to_be_visible(timeout=10000)
             log.info(f"Hostname '{dns_hostname}' found on dashboard")
