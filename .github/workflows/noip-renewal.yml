@@ -50,11 +50,13 @@ jobs:
           OTP_SECRET: ${{ secrets.OTP_SECRET }}
         run: poetry run python main.py
 
-      - name: Upload screenshots
+      - name: Upload run artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dns-renewal-screenshot-${{ github.run_number }}
-          path: dns_renewal_*.png
+          name: dns-renewal-artifacts-${{ github.run_number }}
+          path: |
+            *.png
+            logs/
           retention-days: 90
           if-no-files-found: ignore
