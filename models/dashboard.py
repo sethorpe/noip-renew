@@ -19,7 +19,7 @@ class DashboardPage(BasePage):
             log.debug(f"Looking for hostname link: {dns_hostname}")
             expect(self.dns_hostname_link).to_be_visible(timeout=10000)
             log.info(f"Hostname '{dns_hostname}' found on dashboard")
-        except TimeoutError:
+        except (AssertionError, TimeoutError):
             self.capture_screenshot(prefix="error_dashboard_hostname_not_found")
             log.error(f"Hostname '{dns_hostname}' not found on dashboard")
             raise Exception(

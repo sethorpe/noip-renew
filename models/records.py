@@ -18,7 +18,7 @@ class RecordsPage(BasePage):
             log.debug(f"Checking for expiration banner for '{dns_hostname}'...")
             expect(self.expiration_banner).to_be_visible(timeout=10000)
             log.info(f"Expiration banner found for hostname '{dns_hostname}'")
-        except TimeoutError:
+        except (AssertionError, TimeoutError):
             log.warning(f"Expiration banner not found for '{dns_hostname}'")
             raise Exception(
                 f"Expiration banner not found for hostname '{dns_hostname}'. "
@@ -46,7 +46,7 @@ class RecordsPage(BasePage):
             expect(self.expiration_banner).to_be_hidden(timeout=10000)
             log.info("Expiration banner hidden - renewal successful")
 
-        except TimeoutError as e:
+        except (AssertionError, TimeoutError) as e:
             self.capture_screenshot(prefix="error_renewal_timeout")
             log.error("Timeout waiting for renewal confirmation")
             log.warning("The expiration banner did not disappear after clicking confirm")
