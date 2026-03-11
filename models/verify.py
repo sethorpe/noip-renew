@@ -21,7 +21,7 @@ class VerifyPage(BasePage):
             log.debug("Waiting for 2FA page to load...")
             expect(self.header).to_be_visible(timeout=10000)
             log.info("2FA page loaded successfully")
-        except TimeoutError:
+        except (AssertionError, TimeoutError):
             log.error("Failed to reach 2FA page - page not found")
             raise Exception(
                 "Failed to reach 2FA page. "
@@ -83,7 +83,7 @@ class VerifyPage(BasePage):
             self.verify_button.click()
             self.page.wait_for_load_state("networkidle", timeout=15000)
             log.info("2FA verification successful, redirected to dashboard")
-        except TimeoutError:
+        except (AssertionError, TimeoutError):
             self.capture_screenshot(prefix="error_2fa_timeout")
             log.error("Verify button timeout - OTP may be incorrect or expired")
             raise Exception(
