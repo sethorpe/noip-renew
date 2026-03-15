@@ -1,10 +1,6 @@
 name: No-IP Hostname Renewal
 
 on:
-  push:
-    branches:
-      - 'debug/**'
-
   schedule:
     # Runs at 00:00 UTC on the 1st day of every month (approximately every 30 days)
     - cron: '0 0 1 * *'
