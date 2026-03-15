@@ -40,7 +40,7 @@ jobs:
         run: poetry install --no-interaction --no-root
 
       - name: Install Playwright browsers
-        run: poetry run playwright install chromium --with-deps
+        run: poetry run playwright install firefox --with-deps
 
       - name: Run No-IP renewal script
         env:
@@ -48,6 +48,8 @@ jobs:
           NOIP_USERNAME: ${{ secrets.NOIP_USERNAME }}
           NOIP_PASSWORD: ${{ secrets.NOIP_PASSWORD }}
           OTP_SECRET: ${{ secrets.OTP_SECRET }}
+          BROWSER_TYPE: firefox
+          LOG_LEVEL: DEBUG
         run: poetry run python main.py
 
       - name: Upload run artifacts

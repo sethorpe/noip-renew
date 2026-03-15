@@ -81,6 +81,7 @@ class VerifyPage(BasePage):
         try:
             log.debug("Clicking verify button...")
             self.verify_button.click()
+            self.page.wait_for_url(lambda url: "2fa" not in url, timeout=15000)
             self.page.wait_for_load_state("networkidle", timeout=15000)
             log.info("2FA verification successful, redirected to dashboard")
         except (AssertionError, TimeoutError):
